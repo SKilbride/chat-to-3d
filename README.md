@@ -10,51 +10,71 @@ An application that combines natural language processing with 3D asset generatio
 - Blender auto-import functionality for generated assets
 - VRAM management with process termination
 
-## Installation Methods
+## Installation
 
-There are two ways to install and run the application:
+### Prerequisites
+The NIM Prerequisite Installer requires Microsoft User Account Control (UAC) to be enabled.  UAC is enabled by default for Windows, but if it has been disabled, it must be enabled to ensure successful installation of the NIM Prerequisite Installer.  More information on Microsoft UAC can found [HERE](https://support.microsoft.com/en-us/windows/user-account-control-settings-d5b2046b-dcb8-54eb-f732-059f321afe18)
 
-### Method 1: Docker Installation (Recommended)
-Can also use pre built docker image. Refer to the usage section after step 1.
-
-1. Clone this repository:
-```bash
-git clone --recursive https://github.com/anmaurya001/chat-to-3d.git
-
-# If you forgot --recursive during clone:
-# git submodule update --init --recursive
+Download the MS Visual Studio Build Tools [vs_buildTools.exe](https://aka.ms/vs/17/release/vs_BuildTools.exe)
+Open a command prompt at the vs_BuildTools.exe file location and send the following command:
 ```
-
-2. Build the Docker image in wsl:
-```bash
-# get into wsl shell and navigate to the repo
-Wsl -d NVIDIA-Workbench -u root   
-cd chat-to-3d
-
-# Build with default settings
-podman build -t chat-to-3d-app .
-
-# Or force a rebuild by providing a unique value for FORCE_REBUILD
-podman build --build-arg FORCE_REBUILD=$(date +%s) -t chat-to-3d-app .
-```
-
-
-### Method 2: Manual Installation
-
-#### Prerequisites
-
-### Windows Installation (Required for TRELLIS) - [TRELLIS Windows Installation Guide](https://github.com/ericcraft-mh/TRELLIS-install-windows) for Windows setup instructions
-
-Before installing this project, you need to set up the development environment on Windows:
-
-1. Install Visual Studio Build Tools 2022:
-```bash
 vs_buildtools.exe --norestart --passive --add Microsoft.VisualStudio.Workload.VCTools --includeRecommended
 ```
+Use winget to install Miniconda:
+```
+winget install miniconda3
+```
+Download the NVIDIA CUDA Toolkit 12.9
+[NVIDIA CUDA Toolkit 12.9](https://developer.download.nvidia.com/compute/cuda/12.9.0/local_installers/cuda_12.9.0_576.02_windows.exe)
+Run the installer and select a custom installation.
+![Screenshot 2025-05-22 221843](https://github.com/user-attachments/assets/e2e7fe07-d530-4aca-9668-a8566d1d5864)
+From the options select ONLY:  
+CUDA  >> Development >> Compiler
+CUDA >> Runtime >> Libraries
+![Screenshot 2025-05-22 222023](https://github.com/user-attachments/assets/9ccd92cc-55a5-467d-b4f3-f1e821a07689)
+Complete the installation
 
-2. Install Python 3.11.9
+Download the [NIM Prerequisite Installer](https://assets.ngc.nvidia.com/products/api-catalog/rtx/NIMSetup.exe), and run the NIMSetup.exe file, and follow the instructions in the setup dialogs. This will install the necessary system components to work with NVIDIA NIMs on your system.
 
-#### Installation Steps
+You will need to reboot your computer to complete the installation.
+
+Git is required and should be installed using winget from a command prompt::
+```
+winget install --id Git.Git 
+```
+
+Install Microsoft Visual C++ 2015-2022 Redistributable Package  
+[https://aka.ms/vs/17/release/vc\_redist.x64.exe](https://aka.ms/vs/17/release/vc_redist.x64.exe)
+or
+```
+winget install Microsoft.VCRedist.2015+.x64
+```
+![Untitled-8](https://github.com/user-attachments/assets/29184836-3791-4c22-8a40-3254590faa0e)
+
+This blueprint requires the installation of Blender. The blueprint has been tested with the Blender 4.27 LTS (Long Term Support) build.   
+[https://www.blender.org/download/release/Blender4.2/blender-4.2.7-windows-x64.msi](https://www.blender.org/download/release/Blender4.2/blender-4.2.7-windows-x64.msi)
+
+Blender 4.27 can also be installed using winget from a command prompt:
+```
+winget install --id 9NW1B444LDLW
+```
+
+### Create a Miniconda environment
+1. From the Windows Start button, open a Anaconda (Miniconda) Prompt
+2. ![image](https://github.com/user-attachments/assets/a53c4eb6-fb96-4f72-8cee-3aa12e0a470e)
+3. You should see the command prompt with prompt prefixed with the (base) conda environment name
+4. Create a dedicated environment for the blueprint
+5. ![image](https://github.com/user-attachments/assets/c9161d64-2d9d-4eae-92b7-5277ef8fa872)
+6. ```conda create -n trellis python=3.11.9```
+7. ![image](https://github.com/user-attachments/assets/e32395e5-bbdb-4c2b-b270-044c1ec21512)
+8. Select Y to proceed
+9. Once the environment is successfully created, activate the trellis environment
+10. ```conda activate trellis```
+11. ![image](https://github.com/user-attachments/assets/fc593129-4f6f-4388-8ab6-cb523fefd5c2)
+12. The "trellis" environment name will now be prefixed in the command prompt
+13. ![image](https://github.com/user-attachments/assets/8500c4ef-6614-461f-82be-9b3a5ac64e22)
+
+### Installation Steps
 
 1. Clone this repository:
 ```bash
@@ -64,94 +84,30 @@ git clone --recursive https://github.com/anmaurya001/chat-to-3d.git
 # git submodule update --init --recursive
 ```
 
-2. Create and activate a virtual environment in the  directory:
-```bash
-# Create virtual environment
-python -m venv .venv
-
-# Activate virtual environment
-# On Windows:
-.venv\Scripts\activate
-```
+2. Activate the trellis environment
+3. ```conda activate trellis```
 
 3. Install dependencies:
-```bash
-# Update pip and install build tools
-python -m pip install --upgrade pip wheel
-python -m pip install setuptools==75.8.2
+#### Update pip and install build tools
+```python -m pip install --upgrade pip wheel```
+```python -m pip install setuptools==75.8.2```
 
-# Install TRELLIS requirements from Windows installation guide
+#### Install requirements
+```
 pip install -r requirements-torch.txt
 pip install -r requirements-other.txt
-
-# Install POC requirements
 pip install -r requirements.txt
 ```
 
 ## Usage
-
-### Method 1: Docker Installation/Pre built docker image
-
-1. Start the LLM Agent NIM
-```bash
-cd nim_llm
-pip install -r requirements.txt
-python run_llama.py
-```
-
-2. Start the application in wsl:
-Locally built image
-```bash
-# get into wsl shell 
-Wsl -d NVIDIA-Workbench -u root
-
-# Run the following in wsl
-WINDOWS_USER=$(cmd.exe /c echo %USERNAME% | tr -d '\r')
-export LOCAL_TRELLIS_CACHE="/mnt/c/Users/${WINDOWS_USER}/.trellis/"
-export LOCAL_MODEL_CACHE=~/.cache/3d-guided-bp
-mkdir -p "$LOCAL_TRELLIS_CACHE"
-mkdir -p "$LOCAL_MODEL_CACHE"
-chmod -R a+w "$LOCAL_TRELLIS_CACHE"
-chmod -R a+w "$LOCAL_MODEL_CACHE"
-podman run -it --rm --device nvidia.com/gpu=all -p 7860:7860 -v "$LOCAL_MODEL_CACHE:/home/user/.cache" -v  "$LOCAL_TRELLIS_CACHE:/home/user/.trellis/" localhost/chat-to-3d-app:latest
-```
-OR 
-Pre built image from dockerhub
-```bash
-# get into wsl shell 
-Wsl -d NVIDIA-Workbench -u root
-
-# Run the following in wsl
-# Loging to docker.io
-podman login docker.io
-
-export LOCAL_TRELLIS_CACHE="/mnt/c/Users/${WINDOWS_USER}/.trellis/"
-export LOCAL_MODEL_CACHE=~/.cache/3d-guided-bp
-mkdir -p "$LOCAL_TRELLIS_CACHE"
-mkdir -p "$LOCAL_MODEL_CACHE"
-chmod -R a+w "$LOCAL_TRELLIS_CACHE"
-chmod -R a+w "$LOCAL_MODEL_CACHE"
-podman run -it --rm --device nvidia.com/gpu=all -p 7860:7860 -v "$LOCAL_MODEL_CACHE:/home/user/.cache" -v  "$LOCAL_TRELLIS_CACHE:/home/user/.trellis/" anmaurya548/chat-to-3d:latest
-```
-If asked about which registry to download from choose : docker.io/anmaurya548/chat-to-3d:latest
-
-3. Open your browser to http://localhost:7860
-
-4. To terminate the application:
-   - Press Ctrl+C in the terminal where podman is running
-
-### Method 2: Manual Installation
-
 1. Start the LLM NIM
 ```bash
 cd nim_llm
-pip install -r requirements.txt
 python run_llama.py
 ```
 
 2. Start the application:
 ```bash
-# On Windows:
 cd chat-to-3d-core
 set ATTN_BACKEND=flash-attn
 set SPCONV_ALGO=native
