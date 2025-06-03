@@ -98,8 +98,17 @@ pip install -r requirements-torch.txt
 pip install -r requirements-other.txt
 pip install -r requirements.txt
 ```
+### Copy Blender Add-Ons to the Blender Add On directory
+1. From the blender folder of the local repository, copy the files NV_Trellis_Addon.py, and asset_importer.py
+2. Copy these files to ```%appdata%\Blender Foundation\Blender\4.2\scripts\addons```
+3. Open Blender
+4. Open Edit >> Preferences >> Add-Ons
+5.![image](https://github.com/user-attachments/assets/0dd045e1-225a-425f-9f96-9047f3ad476a)
+6. Enable CHAT-To-3D and Asset Importer by checking the boxes next to the add on names.
+7. Open the CHAT-TO-3D add on preferences and set the CHAT-TO-3D base folder to the chat-to-3d local repository directory.
+8. ![image](https://github.com/user-attachments/assets/1f9b6bec-dd13-4a7b-9a02-ac9c84a56869)
 
-## Usage
+## Usage - Manual
 1. Start the LLM NIM
 ```bash
 cd nim_llm
@@ -126,6 +135,18 @@ This will:
 - Gracefully terminate the Gradio application
 - Free up GPU memory
 - Allow you to proceed with other operations (e.g., Blender)
+
+## Usage - Blender Add On
+The CHAT-TO-3D Blender add-on can automatically manage the CHAT-TO-3D services without the need to manually start or stop these services outside of Blender.
+1. Open Blender
+2. In the 3D layout view look for the Add On tabs on the right edge of the viewport, press N if they are not visible
+3. ![image](https://github.com/user-attachments/assets/2bfc6cb2-aa3a-4422-b1d1-a983ed21407d)
+4. Note: It is recommended to open a system console viewer to monitor the services and any information or errors that may be output.
+   a. Blender Menu >> Window >> Toggle System Console
+5. Click the Start CHAT-TO-3D button to start the LLM agent, and the Trellis 3D services.
+6. ![image](https://github.com/user-attachments/assets/b5391eed-0cca-45da-952a-04381804c0b5)
+7. Once all services have successfully started, the service will indicate: READY and the OPEN CHAT-TO-3D UI button will become available
+
 
 ### Using the Interface
 
