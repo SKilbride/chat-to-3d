@@ -150,12 +150,13 @@ The CHAT-TO-3D Blender add-on can automatically manage the CHAT-TO-3D services w
 
 ### Using the Interface
 
-Once the application is running (either through Docker or manual installation), you can:
+Once the application is running (either through manual start or via Blender Add-On), you can:
 
 - Describe your scene
 - Get AI suggestions for objects
 - Generate 3D assets
 - Auto-import into Blender
+  
 
 ### Blender Integration
 - Open Blender
